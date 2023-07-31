@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: unms-controller
+  name: unms-controller
+  namespace: unms
+spec:
+  replicas: 1
+  serviceName: unms-controller
+  selector:
+    matchLabels:
+      app: unms-controller
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: unms-controller
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: 'Europe/Stockholm'
+          image: nico640/docker-unms:2.2.15
+          name: unms-controller
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
+            - name: netflow
+              containerPort: 2055
+              protocol: UDP
+          volumeMounts:
+            - mountPath: /config
+              name: unms
+      restartPolicy: Always
+      volumes:
+        - name: unms
+          persistentVolumeClaim:
+            claimName: unms
+

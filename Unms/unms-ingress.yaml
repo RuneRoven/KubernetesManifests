@@ -1,0 +1,52 @@
+# we need 2 ingresses. first to redirect from http to https and then another to skip verification of certificates
+# redirect from http to https
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  namespace: unms
+  name: unms-controller
+spec:
+  routes:
+    - match: Host(`unms.local`)
+      kind: Rule
+      services:
+        - name: unms-controller
+          port: 443
+      middlewares:
+        - name: redirect-https
+---
+# middleware to handle the redirection from http to https
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: unms
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+# ingress for selfsigned certificate
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  namespace: unms
+  name: unms-controller
+spec:
+  routes:
+  - match: Host(`unms.local`)
+    kind: Rule
+    services:
+    - name: unms-controller
+      port: 443
+      scheme: https
+      serversTransport: insecure-https
+---
+# server transport to skip certificate checking
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: insecure-https
+  namespace: unms
+spec:
+  insecureSkipVerify: true
