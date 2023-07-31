@@ -1,3 +1,0 @@
-[submodule "unifi"]
-	path = unifi
-	url = https://github.com/RuneRoven/KubernetesManifests/unifi.git
