@@ -24,6 +24,6 @@ spec:
       port: 2055
       protocol: UDP
       targetPort: 2055
-      nodePort: 31002  # Choose an available node port that doesn't conflict
+      nodePort: 31003  # Choose an available node port that doesn't conflict
   externalIPs:
     - "192.168.3.23"
