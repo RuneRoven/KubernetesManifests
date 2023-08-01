@@ -13,7 +13,6 @@ spec:
       app: unifi-controller
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: unifi-controller
     spec:
